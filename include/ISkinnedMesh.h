@@ -27,7 +27,6 @@ namespace scene
 		EIM_COUNT
 	};
 
-
 	//! Interface for using some special functions of Skinned meshes
 	class ISkinnedMesh : public IAnimatedMesh
 	{
@@ -174,6 +173,18 @@ namespace scene
 			s32 scaleHint;
 			s32 rotationHint;
 		};
+		
+		//! Callback interface for override SkinnedMesh animations
+		class ISkinnedMeshAnimationOverrideCallback
+		{
+		public:
+			//! Callback function to override animation
+			/** \return True if this animation should be override. */
+			virtual bool getFrameData(f32 frame, SJoint *joint,
+					core::vector3df &position, s32 &positionHint,
+					core::vector3df &scale, s32 &scaleHint,
+					core::quaternion &rotation, s32 &rotationHint)=0;
+		};
 
 
 		//Interface for the mesh loaders (finalize should lock these functions, and they should have some prefix like loader_
@@ -210,6 +221,9 @@ namespace scene
 
 		//! Check if the mesh is non-animated
 		virtual bool isStatic()=0;
+		
+		//! Callback to override animation
+		ISkinnedMeshAnimationOverrideCallback * animationOverrideCallback;
 	};
 
 } // end namespace scene
