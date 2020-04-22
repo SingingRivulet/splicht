@@ -7,6 +7,7 @@
 
 #include "ISceneNode.h"
 #include "IBoneSceneNode.h"
+#include "ISkinnedMesh.h"
 #include "IAnimatedMeshMD2.h"
 #include "IAnimatedMeshMD3.h"
 
@@ -209,9 +210,33 @@ namespace scene
 		not animate. */
 		virtual void setTransitionTime(f32 Time) =0;
 
+		//! Configure for mix animation.
+		struct IAnimationBlend
+		{
+			//! Use animation from the mesh. 
+			ISkinnedMesh * 	animateFrom;
+			//! Blend
+			f32				blend;
+			IAnimationBlend()
+			{
+				animateFrom = NULL;
+				blend = 1.0f;
+			}
+			IAnimationBlend(const IAnimationBlend & i)
+			{
+				animateFrom = i.animateFrom;
+				blend = i.blend;
+			}
+			IAnimationBlend(ISkinnedMesh * a,f32 b)
+			{
+				animateFrom = a;
+				blend = b;
+			}
+		};
+		
 		//! animates the joints in the mesh based on the current frame.
 		/** Also takes in to account transitions. */
-		virtual void animateJoints(bool CalculateAbsolutePositions=true) = 0;
+		virtual void animateJoints(bool CalculateAbsolutePositions=true , core::array<IAnimationBlend> * blend=NULL) = 0;
 
 		//! render mesh ignoring its transformation.
 		/** Culling is unaffected. */

@@ -150,7 +150,7 @@ namespace scene
 		virtual void setTransitionTime(f32 Time) _IRR_OVERRIDE_;
 
 		//! updates the joint positions of this mesh
-		virtual void animateJoints(bool CalculateAbsolutePositions=true) _IRR_OVERRIDE_;
+		virtual void animateJoints(bool CalculateAbsolutePositions=true , core::array<IAnimationBlend> * blend=NULL) _IRR_OVERRIDE_;
 
 		//! render mesh ignoring its transformation. Used with ragdolls. (culling is unaffected)
 		virtual void setRenderFromIdentity( bool On ) _IRR_OVERRIDE_;

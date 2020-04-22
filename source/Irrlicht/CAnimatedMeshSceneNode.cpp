@@ -936,7 +936,7 @@ void CAnimatedMeshSceneNode::setRenderFromIdentity(bool enable)
 
 
 //! updates the joint positions of this mesh
-void CAnimatedMeshSceneNode::animateJoints(bool CalculateAbsolutePositions)
+void CAnimatedMeshSceneNode::animateJoints(bool CalculateAbsolutePositions , core::array<IAnimationBlend> * blend)
 {
 #ifndef _IRR_COMPILE_WITH_SKINNED_MESH_SUPPORT_
 	return;
@@ -949,7 +949,20 @@ void CAnimatedMeshSceneNode::animateJoints(bool CalculateAbsolutePositions)
 		CSkinnedMesh* skinnedMesh=reinterpret_cast<CSkinnedMesh*>(Mesh);
 
 		skinnedMesh->transferOnlyJointsHintsToMesh( JointChildSceneNodes );
-		skinnedMesh->animateMesh(frame, 1.0f);
+		if(blend)
+		{
+			core::array<IAnimationBlend> & blendArray = *blend;
+			u32 blendArrayLength = blendArray.size();
+			for(u32 i=0 ; i<blendArrayLength ; ++i)
+			{
+				if(skinnedMesh->useAnimationFrom(blendArray[i].animateFrom))
+					skinnedMesh->animateMesh(frame, blendArray[i].blend);
+			}
+		}
+		else
+		{
+			skinnedMesh->animateMesh(frame, 1.0f);
+		}
 		skinnedMesh->recoverJointsFromMesh( JointChildSceneNodes);
 
 		//-----------------------------------------
